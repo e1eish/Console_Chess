@@ -30,8 +30,9 @@ class Board {
     Tile tile[8][8];
     Color currentTurn = WHITE;
 public:
-    void makeMove();
+    bool makeMove();
     void displayBoard();
+    void playChess();
     Board();
 };
 
@@ -233,7 +234,7 @@ int letterToIntCoord(char letter) {
     }
 }
 
-void Board::makeMove() {
+bool Board::makeMove() {
     string coordStart;
     string coordEnd;
     int x1;
@@ -245,12 +246,15 @@ void Board::makeMove() {
     while (isValid == false) {
         cout << "What is the coordinate (A1) of the piece you want to move?\n> ";
         cin >> coordStart;
+        if (coordStart == "q" || coordStart == "Q") {
+            exit(0);
+        }
 
         x1 = letterToIntCoord(coordStart[0]);
         y1 = coordStart[1] - 49;
 
-        cout << "x:" << x1 << ", y:" << y1 << endl;
-        cout << "piece:" << tile[y1][x1].getPiece() << ", color:" << tile[y1][x1].getColor() << endl;
+        //cout << "x:" << x1 << ", y:" << y1 << endl;
+        //cout << "piece:" << tile[y1][x1].getPiece() << ", color:" << tile[y1][x1].getColor() << endl;
 
         if (x1 < 0 || x1 > 7) {
             cout << "Please enter a coordinate within the board." << endl;
@@ -267,12 +271,15 @@ void Board::makeMove() {
     while (isValid == false) {
         cout << "What is the coodinate (A1) the piece should be placed at?\n> ";
         cin >> coordEnd;
+        if (coordEnd == "q" || coordEnd == "Q") {
+            exit(0);
+        }
 
         x2 = letterToIntCoord(coordEnd[0]);
         y2 = coordEnd[1] - 49;
 
-        cout << "x:" << x2 << "y:" << y2 << endl;
-        cout << "piece:" << tile[y2][x2].getPiece() << ", color:" << tile[y2][x2].getColor() << endl;
+        //cout << "x:" << x2 << "y:" << y2 << endl;
+        //cout << "piece:" << tile[y2][x2].getPiece() << ", color:" << tile[y2][x2].getColor() << endl;
 
         if (x2 < 0 || x2 > 7) {
             cout << "Please enter a coordinate within the board." << endl;
@@ -285,16 +292,41 @@ void Board::makeMove() {
         }
     }
 
+    if (tile[y2][x2].getPiece() == KING) {
+        tile[y2][x2].setPieceAndColor(tile[y1][x1].getPiece(), tile[y1][x1].getColor());
+        tile[y1][x1].setEmpty();
+        if (currentTurn == WHITE) {
+            cout << "White won!" << endl;
+        } else {
+            cout << "Black won!" << endl;
+        }
+        return true;
+    }
     tile[y2][x2].setPieceAndColor(tile[y1][x1].getPiece(), tile[y1][x1].getColor());
     tile[y1][x1].setEmpty();
+    if (currentTurn == WHITE) {
+        currentTurn = BLACK;
+    } else {
+        currentTurn = WHITE;
+    }
+    return false;
+}
+
+void Board::playChess() {
+    displayBoard();
+    bool isPlaying = true;
+    while (isPlaying) {
+        if (makeMove()) {
+            isPlaying = false;
+        }
+        displayBoard();
+    }
 }
 
 
 
 int main() {
     Board board;
-    board.displayBoard();
-    board.makeMove();
-    board.displayBoard();
+    board.playChess();
     return 0;
 }
