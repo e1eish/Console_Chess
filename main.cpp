@@ -29,8 +29,8 @@ public:
 class Board {
     Tile tile[8][8];
     Color currentTurn = WHITE;
-    void makeMove(int x1, int y1, int x2, int y2);
 public:
+    void makeMove();
     void displayBoard();
     Board();
 };
@@ -204,10 +204,97 @@ void Board::displayBoard() {
     cout << "  A    B    C    D    E    F    G    H" << endl;
 }
 
+int letterToIntCoord(char letter) {
+    char first = 'A';
+    char second = 'B';
+    char third = 'C';
+    char fourth = 'D';
+    char fifth = 'E';
+    char sixth = 'F';
+    char seventh = 'G';
+    char eighth = 'H';
+    
+    if (letter == first) {
+        return 0;
+    } else if (letter == second) {
+        return 1;
+    } else if (letter == third) {
+        return 2;
+    } else if (letter == fourth) {
+        return 3;
+    } else if (letter == fifth) {
+        return 4;
+    } else if (letter == sixth) {
+        return 5;
+    } else if (letter == seventh) {
+        return 6;
+    } else {
+        return 7;
+    }
+}
+
+void Board::makeMove() {
+    string coordStart;
+    string coordEnd;
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+    bool isValid = false;
+
+    while (isValid == false) {
+        cout << "What is the coordinate (A1) of the piece you want to move?\n> ";
+        cin >> coordStart;
+
+        x1 = letterToIntCoord(coordStart[0]);
+        y1 = coordStart[1] - 49;
+
+        cout << "x:" << x1 << ", y:" << y1 << endl;
+        cout << "piece:" << tile[y1][x1].getPiece() << ", color:" << tile[y1][x1].getColor() << endl;
+
+        if (x1 < 0 || x1 > 7) {
+            cout << "Please enter a coordinate within the board." << endl;
+        } else if (y1 < 0 || y1 > 7) {
+            cout << "Please enter a coordinate within the board." << endl;
+        } else if (tile[y1][x1].getColor() != currentTurn) {
+            cout << "Please enter a coordinate that has your piece." << endl;
+        } else {
+            isValid = true;
+        }
+    }
+
+    isValid = false;
+    while (isValid == false) {
+        cout << "What is the coodinate (A1) the piece should be placed at?\n> ";
+        cin >> coordEnd;
+
+        x2 = letterToIntCoord(coordEnd[0]);
+        y2 = coordEnd[1] - 49;
+
+        cout << "x:" << x2 << "y:" << y2 << endl;
+        cout << "piece:" << tile[y2][x2].getPiece() << ", color:" << tile[y2][x2].getColor() << endl;
+
+        if (x2 < 0 || x2 > 7) {
+            cout << "Please enter a coordinate within the board." << endl;
+        } else if (y2 < 0 || y2 > 7) {
+            cout << "Please enter a coordinate within the board." << endl;
+        } else if (tile[y2][x2].getColor() == currentTurn) {
+            cout << "That space already has a piece." << endl;
+        } else {
+            isValid = true;
+        }
+    }
+
+    tile[y2][x2].setPieceAndColor(tile[y1][x1].getPiece(), tile[y1][x1].getColor());
+    tile[y1][x1].setEmpty();
+}
+
 
 
 int main() {
     Board board;
+    board.displayBoard();
+    board.makeMove();
     board.displayBoard();
     return 0;
 }
