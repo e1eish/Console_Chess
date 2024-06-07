@@ -248,7 +248,8 @@ bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
             tile[0][5].setPieceAndColor(ROOK, WHITE);
             tile[0][7].setEmpty();
             return true;
-        } else if ((file2 == 2 && rank2 == 0) && (tile[0][0].getPiece() == ROOK)) { // Castle queen side.
+        // Castle queen side
+        } else if ((file2 == 2 && rank2 == 0) && (tile[0][0].getPiece() == ROOK)) {
             tile[0][3].setPieceAndColor(ROOK, WHITE);
             tile[0][0].setEmpty();
             return true;
@@ -259,7 +260,8 @@ bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
             tile[7][5].setPieceAndColor(ROOK, BLACK);
             tile[7][7].setEmpty();
             return true;
-        } else if ((file2 == 2 && rank2 == 7) && (tile[7][0].getPiece() == ROOK)) { // Castle queen side.
+        // Castle queen side.
+        } else if ((file2 == 2 && rank2 == 7) && (tile[7][0].getPiece() == ROOK)) {
             tile[7][3].setPieceAndColor(ROOK, BLACK);
             tile[7][0].setEmpty();
             return true;
@@ -282,7 +284,20 @@ bool Board::bishopToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::knightToMove(int file1, int rank1, int file2, int rank2) {
-    return true;
+    // Moving up.
+    if ((rank2 == rank1 + 2) && (file2 == file1 + 1 || file2 == file1 - 1)) {
+        return true;
+    // Moving down.
+    } else if ((rank2 == rank1 - 2) && (file2 == file1 + 1 || file2 == file1 - 1)) {
+        return true;
+    // Moving right.
+    } else if ((file2 == file1 + 2) && (rank2 == rank1 + 1 || rank2 == rank1 - 1)) {
+        return true;
+    // Moving left.
+    } else if ((file2 == file1 - 1) && (rank2 == rank1 + 1 || rank2 == rank1 - 1)) {
+        return true;
+    }
+    return false;
 }
 
 bool Board::rookToMove(int file1, int rank1, int file2, int rank2) {
