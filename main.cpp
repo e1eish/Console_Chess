@@ -10,18 +10,18 @@ enum Color {WHITE, BLACK, NONE};
 class Tile {
     Piece piece;
     Color color;
-    int x;
-    int y;
+    int file;
+    int rank;
 public:
     void setPiece(Piece p);
     Piece getPiece();
     void setColor(Color c);
     Color getColor();
     void setPieceAndColor(Piece p, Color c);
-    void setX(int newX);
-    int getX();
-    void setY(int newY);
-    int getY();
+    void setFile(int newFile);
+    int getFile();
+    void setRank(int newRank);
+    int getRank();
     void setEmpty();
     Tile();
 };
@@ -29,8 +29,14 @@ public:
 class Board {
     Tile tile[8][8];
     Color currentTurn = WHITE;
-public:
     bool makeMove();
+    bool kingToMove(int file1, int rank1, int file2, int rank2);
+    bool queenToMove(int file1, int rank1, int file2, int rank2);
+    bool bishopToMove(int file1, int rank1, int file2, int rank2);
+    bool knightToMove(int file1, int rank1, int file2, int rank2);
+    bool rookToMove(int file1, int rank1, int file2, int rank2);
+    bool pawnToMove(int file1, int rank1, int file2, int rank2);
+public:
     void displayBoard();
     void playChess();
     Board();
@@ -67,20 +73,20 @@ void Tile::setPieceAndColor(Piece p, Color c) {
     color = c;
 }
 
-void Tile::setX(int newX) {
-    x = newX;
+void Tile::setFile(int newFile) {
+    file = newFile;
 }
 
-int Tile::getX() {
-    return x;
+int Tile::getFile() {
+    return file;
 }
 
-void Tile::setY(int newY) {
-    y = newY;
+void Tile::setRank(int newRank) {
+    rank = newRank;
 }
 
-int Tile::getY() {
-    return y;
+int Tile::getRank() {
+    return rank;
 }
 
 Board::Board() {
@@ -109,8 +115,8 @@ Board::Board() {
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            tile[i][j].setX(i);
-            tile[i][j].setY(j);
+            tile[i][j].setFile(i);
+            tile[i][j].setRank(j);
         }
     }
 }
@@ -234,67 +240,174 @@ int letterToIntCoord(char letter) {
     }
 }
 
+bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
+    // Take care of castling.
+    if ((tile[rank1][file1].getColor() == WHITE) && (file1 ==4 && rank1 == 0)) {
+        // Castle king side.
+        if ((file2 == 6 && rank2 == 0) && (tile[0][7].getPiece() == ROOK)) {
+            tile[0][5].setPieceAndColor(ROOK, WHITE);
+            tile[0][7].setEmpty();
+            return true;
+        } else if ((file2 == 2 && rank2 == 0) && (tile[0][0].getPiece() == ROOK)) { // Castle queen side.
+            tile[0][3].setPieceAndColor(ROOK, WHITE);
+            tile[0][0].setEmpty();
+            return true;
+        }
+    } else if ((tile[rank1][file1].getColor() == BLACK) && (file1 == 4 && rank1 == 7)) {
+        // Castle king side.
+        if ((file2 == 6 && rank2 == 7) && (tile[7][7].getPiece() == ROOK)) {
+            tile[7][5].setPieceAndColor(ROOK, BLACK);
+            tile[7][7].setEmpty();
+            return true;
+        } else if ((file2 == 2 && rank2 == 7) && (tile[7][0].getPiece() == ROOK)) { // Castle queen side.
+            tile[7][3].setPieceAndColor(ROOK, BLACK);
+            tile[7][0].setEmpty();
+            return true;
+        }
+    }
+    
+    return true;
+}
+
+bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
+    return true;
+}
+
+bool Board::bishopToMove(int file1, int rank1, int file2, int rank2) {
+    return true;
+}
+
+bool Board::knightToMove(int file1, int rank1, int file2, int rank2) {
+    return true;
+}
+
+bool Board::rookToMove(int file1, int rank1, int file2, int rank2) {
+    return true;
+}
+
+bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
+    return true;
+}
+
 bool Board::makeMove() {
     string coordStart;
     string coordEnd;
-    int x1;
-    int y1;
-    int x2;
-    int y2;
+    int file1;
+    int rank1;
+    int file2;
+    int rank2;
     bool isValid = false;
+    bool validMove = false;
 
-    while (isValid == false) {
-        cout << "What is the coordinate (A1) of the piece you want to move?\n> ";
-        cin >> coordStart;
-        if (coordStart == "q" || coordStart == "Q") {
-            exit(0);
+    while (validMove == false) {
+        while (isValid == false) {
+            cout << "What is the coordinate (A1) of the piece you want to move?\n> ";
+            cin >> coordStart;
+            if (coordStart == "q" || coordStart == "Q") {
+                exit(0);
+            }
+
+            file1 = letterToIntCoord(coordStart[0]);
+            rank1 = coordStart[1] - 49;
+
+            //cout << "x:" << file1 << ", y:" << rank1 << endl;
+            //cout << "piece:" << tile[rank1][file1].getPiece() << ", color:" << tile[rank1][file1].getColor() << endl;
+
+            if (file1 < 0 || file1 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (rank1 < 0 || rank1 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (tile[rank1][file1].getColor() != currentTurn) {
+                cout << "Please enter a coordinate that has your piece." << endl;
+            } else {
+                isValid = true;
+            }
         }
 
-        x1 = letterToIntCoord(coordStart[0]);
-        y1 = coordStart[1] - 49;
+        isValid = false;
+        while (isValid == false) {
+            cout << "What is the coodinate (A1) the piece should be placed at?\n> ";
+            cin >> coordEnd;
+            if (coordEnd == "q" || coordEnd == "Q") {
+                exit(0);
+            }
 
-        //cout << "x:" << x1 << ", y:" << y1 << endl;
-        //cout << "piece:" << tile[y1][x1].getPiece() << ", color:" << tile[y1][x1].getColor() << endl;
+            file2 = letterToIntCoord(coordEnd[0]);
+            rank2 = coordEnd[1] - 49;
 
-        if (x1 < 0 || x1 > 7) {
-            cout << "Please enter a coordinate within the board." << endl;
-        } else if (y1 < 0 || y1 > 7) {
-            cout << "Please enter a coordinate within the board." << endl;
-        } else if (tile[y1][x1].getColor() != currentTurn) {
-            cout << "Please enter a coordinate that has your piece." << endl;
-        } else {
-            isValid = true;
+            //cout << "x:" << file2 << "y:" << rank2 << endl;
+            //cout << "piece:" << tile[rank2][file2].getPiece() << ", color:" << tile[rank2][file2].getColor() << endl;
+
+            if (file2 < 0 || file2 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (rank2 < 0 || rank2 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (tile[rank2][file2].getColor() == currentTurn) {
+                cout << "That space already has a piece." << endl;
+            } else {
+                isValid = true;
+            }
+        }
+
+        // King to move.
+        if (tile[rank1][file1].getPiece() == KING) {
+            if (kingToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The king cannot move there." << endl;
+            }
+        }
+
+        // Queen to move.
+        if (tile[rank1][file1].getPiece() == QUEEN) {
+            if (queenToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The queen cannot move there." << endl;
+            }
+        }
+
+        // Bishop to move.
+        if (tile[rank1][file1].getPiece() == BISHOP) {
+            if (bishopToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The bishop cannot move there." << endl;
+            }
+        }
+
+        // Knight to move.
+        if (tile[rank1][file1].getPiece() == KNIGHT) {
+            if (knightToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The knight cannot move there." << endl;
+            }
+        }
+
+        // Rook to move.
+        if (tile[rank1][file1].getPiece() == ROOK) {
+            if (rookToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The rook cannot move there." << endl;
+            }
+        }
+
+        // Pawn to move.
+        if (tile[rank1][file1].getPiece() == PAWN) {
+            if (pawnToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The pawn cannot move there." << endl;
+            }
         }
     }
 
-    isValid = false;
-    while (isValid == false) {
-        cout << "What is the coodinate (A1) the piece should be placed at?\n> ";
-        cin >> coordEnd;
-        if (coordEnd == "q" || coordEnd == "Q") {
-            exit(0);
-        }
-
-        x2 = letterToIntCoord(coordEnd[0]);
-        y2 = coordEnd[1] - 49;
-
-        //cout << "x:" << x2 << "y:" << y2 << endl;
-        //cout << "piece:" << tile[y2][x2].getPiece() << ", color:" << tile[y2][x2].getColor() << endl;
-
-        if (x2 < 0 || x2 > 7) {
-            cout << "Please enter a coordinate within the board." << endl;
-        } else if (y2 < 0 || y2 > 7) {
-            cout << "Please enter a coordinate within the board." << endl;
-        } else if (tile[y2][x2].getColor() == currentTurn) {
-            cout << "That space already has a piece." << endl;
-        } else {
-            isValid = true;
-        }
-    }
-
-    if (tile[y2][x2].getPiece() == KING) {
-        tile[y2][x2].setPieceAndColor(tile[y1][x1].getPiece(), tile[y1][x1].getColor());
-        tile[y1][x1].setEmpty();
+    // Check king captured.
+    if (tile[rank2][file2].getPiece() == KING) {
+        tile[rank2][file2].setPieceAndColor(tile[rank1][file1].getPiece(), tile[rank1][file1].getColor());
+        tile[rank1][file1].setEmpty();
         if (currentTurn == WHITE) {
             cout << "White won!" << endl;
         } else {
@@ -302,8 +415,9 @@ bool Board::makeMove() {
         }
         return true;
     }
-    tile[y2][x2].setPieceAndColor(tile[y1][x1].getPiece(), tile[y1][x1].getColor());
-    tile[y1][x1].setEmpty();
+
+    tile[rank2][file2].setPieceAndColor(tile[rank1][file1].getPiece(), tile[rank1][file1].getColor());
+    tile[rank1][file1].setEmpty();
     if (currentTurn == WHITE) {
         currentTurn = BLACK;
     } else {
