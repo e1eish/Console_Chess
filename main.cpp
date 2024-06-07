@@ -158,6 +158,7 @@ void Board::displayBoard() {
     string blackRook = "\u2656";
     string blackPawn = "\u2659";
     string horizontalLine = "+---+---+---+---+---+---+---+---+";
+    cout << "" << endl;
     if (currentTurn == WHITE) {
         cout << horizontalLine << endl;
         int rank = 8;
@@ -294,6 +295,7 @@ void Board::displayBoard() {
         }
         cout << "  H   G   F   E   D   C   B   A" << endl;
     }
+    cout << "" << endl;
 }
 
 int letterToIntCoord(char letter) {
@@ -694,10 +696,36 @@ void Board::playChess() {
     }
 }
 
+void displayStartMessage() {
+    /*
+        . ..\n
+       . ....\n
+       . ....\n
+        . ..\n
+      . ......\n\n
 
+       .  ...\n
+       .  ...\n
+       .  ...\n
+       .  ...\n
+      .   ....\n
+     .   ......\n
+     .  .......\n\n
+
+    .  .........\n
+    -----------------
+    Welcome to Chess!
+    Enter coordinates, in the form E6, to select and move pieces. Take turns until someone captures their opponent's king.
+    Type "Q" to quit. 
+    */
+    string startArt = "    . ..\n   . ....\n   . ....\n    . ..\n  . ......\n\n   .  ...\n   .  ...\n   .  ...\n   .  ...\n  .   ....\n .   ......\n .  .......\n.  .........\n";
+    string startMessage = "Welcome to Chess!\nEnter coordinates, in the form E6, to select and move pieces. Take turns until someone captures their opponent's king.\nType \"Q\" to quit.";
+    cout << "\n" << startArt << "-----------------\n" << startMessage << endl;
+}
 
 int main() {
     Board board;
+    displayStartMessage();
     board.playChess();
     return 0;
 }
