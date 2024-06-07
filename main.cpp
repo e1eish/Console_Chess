@@ -305,7 +305,51 @@ bool Board::rookToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
-    return true;
+    cout << "color: " << tile[rank2 - 1][file2].getColor() << endl;
+    if (tile[rank1][file1].getColor() == WHITE) {
+        // Starting possible two squares
+        if (rank1 == 1 && rank2 == 3 && file1 == file2) {
+            return true;
+        }
+        // Normal move.
+        if (rank2 == rank1 + 1 && file1 == file2) {
+            return true;
+        }
+        // Capturing a piece.
+        if (rank2 == rank1 + 1 && (file2 == file1 + 1 || file2 == file1 - 1)) {
+            // Normal capture.
+            if (tile[rank2][file2].getColor() == BLACK) {
+                return true;
+            }
+            // En passant
+            if (tile[rank2 - 1][file2].getColor() == BLACK) {
+                tile[rank2 - 1][file2].setEmpty();
+                return true;
+            }
+        }
+    } else {
+        // Starting possible two squares
+        if (rank1 == 6 && rank2 == 4 && file1 == file2) {
+            return true;
+        }
+        // Normal move.
+        if (rank2 == rank1 - 1 && file1 == file2) {
+            return true;
+        }
+        // Capturing a piece.
+        if (rank2 == rank1 - 1 && (file2 == file1 + 1 || file2 == file1 - 1) && tile[rank2][file2].getColor() == WHITE) {
+            // Normal capture.
+            if (tile[rank2][file2].getColor() == WHITE) {
+                return true;
+            }
+            // En passant
+            if (tile[rank1][file2].getColor() == WHITE) {
+                tile[rank1][file2].setEmpty();
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 bool Board::makeMove() {
@@ -318,9 +362,17 @@ bool Board::makeMove() {
     bool isValid = false;
     bool validMove = false;
 
+    string turnName;
+    if (currentTurn == WHITE) {
+        turnName = "White";
+    } else {
+        turnName = "Black";
+    }
+
     while (validMove == false) {
+        isValid = false;
         while (isValid == false) {
-            cout << "What is the coordinate (A1) of the piece you want to move?\n> ";
+            cout << "What is the coordinate (A1) of the piece you want to move?\n" << turnName << "> ";
             cin >> coordStart;
             if (coordStart == "q" || coordStart == "Q") {
                 exit(0);
@@ -345,7 +397,7 @@ bool Board::makeMove() {
 
         isValid = false;
         while (isValid == false) {
-            cout << "What is the coodinate (A1) the piece should be placed at?\n> ";
+            cout << "What is the coodinate the piece should be placed at?\n> ";
             cin >> coordEnd;
             if (coordEnd == "q" || coordEnd == "Q") {
                 exit(0);
@@ -417,6 +469,25 @@ bool Board::makeMove() {
         if (tile[rank1][file1].getPiece() == PAWN) {
             if (pawnToMove(file1, rank1, file2, rank2)) {
                 validMove = true;
+                // Promotion
+                if (rank2 == 0 || rank2 == 7) {
+                    string promotionPieceString;
+                    cout << "What piece would you like to promote to? (Q, B, N, R)\n> ";
+                    cin >> promotionPieceString;
+                    Piece promotionPiece;
+                    if (promotionPieceString == "Q") {
+                        promotionPiece = QUEEN;
+                    } else if (promotionPieceString == "B") {
+                        promotionPiece = BISHOP;
+                    } else if (promotionPieceString == "N") {
+                        promotionPiece = KNIGHT;
+                    } else if (promotionPieceString == "R") {
+                        promotionPiece = ROOK;
+                    } else {
+                        promotionPiece = QUEEN;
+                    }
+                    tile[rank1][file1].setPiece(promotionPiece);
+                }
             } else {
                 cout << "The pawn cannot move there." << endl;
             }
