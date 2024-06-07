@@ -252,7 +252,7 @@ bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
                 }
             }
         } else {
-            for (int i = file2; i < file1 + 1; i++) {
+            for (int i = file2 + 1; i < file1; i++) {
                 if (tile[rank1][i].getPiece() != EMPTY) {
                     return false;
                 }
@@ -268,7 +268,7 @@ bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
                 }
             }
         } else {
-            for (int i = rank2; i < rank1 + 1; i++) {
+            for (int i = rank2 + 1; i < rank1; i++) {
                 if (tile[i][file1].getPiece() != EMPTY) {
                     return false;
                 }
@@ -348,7 +348,13 @@ bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
-    return true;
+    if (abs(file2 - file1) == abs(rank2 - rank1)) {
+        return isDiagonalClear(file1, rank1, file2, rank2);
+    }
+    if (rank1 == rank2 || file1 == file2) {
+        return isRankOrFileClear(file1, rank1, file2, rank2);
+    }
+    return false;
 }
 
 bool Board::bishopToMove(int file1, int rank1, int file2, int rank2) {
