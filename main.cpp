@@ -158,72 +158,142 @@ void Board::displayBoard() {
     string blackRook = "\u2656";
     string blackPawn = "\u2659";
     string horizontalLine = "+---+---+---+---+---+---+---+---+";
-    cout << horizontalLine << endl;
-    int rank = 8;
-    for (int i = 7; i > -1; i--) {
-        for (int j = 0; j < 8; j++) {
-            Piece p = tile[i][j].getPiece();
-            Color c = tile[i][j].getColor();
-            cout << "| ";
-            switch (p) {
-                case KING:
-                    if (c == WHITE) {
-                        cout << whiteKing << " ";
-                        break;
-                    } else {
-                        cout << blackKing << " ";
-                        break;
-                    }
-                case QUEEN:
-                    if (c == WHITE) {
-                        cout << whiteQueen << " ";
-                        break;
-                    } else {
-                        cout << blackQueen << " ";
-                        break;
-                    }
-                case BISHOP:
-                    if (c == WHITE) {
-                        cout << whiteBishop << " ";
-                        break;
-                    } else {
-                        cout << blackBishop << " ";
-                        break;
-                    }
-                case KNIGHT:
-                    if (c == WHITE) {
-                        cout << whiteKnight<< " ";
-                        break;
-                    } else {
-                        cout << blackKnight << " ";
-                        break;
-                    }
-                case ROOK:
-                    if (c == WHITE) {
-                        cout << whiteRook << " ";
-                        break;
-                    } else {
-                        cout << blackRook << " ";
-                        break;
-                    }
-                case PAWN:
-                    if (c == WHITE) {
-                        cout << whitePawn << " ";
-                        break;
-                    } else {
-                        cout << blackPawn << " ";
-                        break;
-                    }
-                case EMPTY:
-                    cout << "  ";
-                    break;
-            }
-        }
-        cout << "| " << rank << endl;
-        rank -= 1;
+    if (currentTurn == WHITE) {
         cout << horizontalLine << endl;
+        int rank = 8;
+        for (int i = 7; i > -1; i--) {
+            for (int j = 0; j < 8; j++) {
+                Piece p = tile[i][j].getPiece();
+                Color c = tile[i][j].getColor();
+                cout << "| ";
+                switch (p) {
+                    case KING:
+                        if (c == WHITE) {
+                            cout << whiteKing << " ";
+                            break;
+                        } else {
+                            cout << blackKing << " ";
+                            break;
+                        }
+                    case QUEEN:
+                        if (c == WHITE) {
+                            cout << whiteQueen << " ";
+                            break;
+                        } else {
+                            cout << blackQueen << " ";
+                            break;
+                        }
+                    case BISHOP:
+                        if (c == WHITE) {
+                            cout << whiteBishop << " ";
+                            break;
+                        } else {
+                            cout << blackBishop << " ";
+                            break;
+                        }
+                    case KNIGHT:
+                        if (c == WHITE) {
+                            cout << whiteKnight<< " ";
+                            break;
+                        } else {
+                            cout << blackKnight << " ";
+                            break;
+                        }
+                    case ROOK:
+                        if (c == WHITE) {
+                            cout << whiteRook << " ";
+                            break;
+                        } else {
+                            cout << blackRook << " ";
+                            break;
+                        }
+                    case PAWN:
+                        if (c == WHITE) {
+                            cout << whitePawn << " ";
+                            break;
+                        } else {
+                            cout << blackPawn << " ";
+                            break;
+                        }
+                    case EMPTY:
+                        cout << "  ";
+                        break;
+                }
+            }
+            cout << "| " << rank << endl;
+            rank -= 1;
+            cout << horizontalLine << endl;
+        }
+        cout << "  A   B   C   D   E   F   G   H" << endl;
     }
-    cout << "  A   B   C   D   E   F   G   H" << endl;
+    if (currentTurn == BLACK) {
+        cout << horizontalLine << endl;
+        int rank = 1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 7; j > -1; j--) {
+                Piece p = tile[i][j].getPiece();
+                Color c = tile[i][j].getColor();
+                cout << "| ";
+                switch (p) {
+                    case KING:
+                        if (c == WHITE) {
+                            cout << whiteKing << " ";
+                            break;
+                        } else {
+                            cout << blackKing << " ";
+                            break;
+                        }
+                    case QUEEN:
+                        if (c == WHITE) {
+                            cout << whiteQueen << " ";
+                            break;
+                        } else {
+                            cout << blackQueen << " ";
+                            break;
+                        }
+                    case BISHOP:
+                        if (c == WHITE) {
+                            cout << whiteBishop << " ";
+                            break;
+                        } else {
+                            cout << blackBishop << " ";
+                            break;
+                        }
+                    case KNIGHT:
+                        if (c == WHITE) {
+                            cout << whiteKnight<< " ";
+                            break;
+                        } else {
+                            cout << blackKnight << " ";
+                            break;
+                        }
+                    case ROOK:
+                        if (c == WHITE) {
+                            cout << whiteRook << " ";
+                            break;
+                        } else {
+                            cout << blackRook << " ";
+                            break;
+                        }
+                    case PAWN:
+                        if (c == WHITE) {
+                            cout << whitePawn << " ";
+                            break;
+                        } else {
+                            cout << blackPawn << " ";
+                            break;
+                        }
+                    case EMPTY:
+                        cout << "  ";
+                        break;
+                }
+            }
+            cout << "| " << rank << endl;
+            rank += 1;
+            cout << horizontalLine << endl;
+        }
+        cout << "  H   G   F   E   D   C   B   A" << endl;
+    }
 }
 
 int letterToIntCoord(char letter) {
