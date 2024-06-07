@@ -32,6 +32,7 @@ class Board {
     Color currentTurn = WHITE;
     bool makeMove();
     bool isRankOrFileClear(int file1, int rank1, int file2, int rank2);
+    bool isDiagonalClear(int file1, int rank1, int file2, int rank2);
     bool kingToMove(int file1, int rank1, int file2, int rank2);
     bool queenToMove(int file1, int rank1, int file2, int rank2);
     bool bishopToMove(int file1, int rank1, int file2, int rank2);
@@ -251,7 +252,7 @@ bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
                 }
             }
         } else {
-            for (int i = file2 + 1; i < file1; i++) {
+            for (int i = file2; i < file1 + 1; i++) {
                 if (tile[rank1][i].getPiece() != EMPTY) {
                     return false;
                 }
@@ -267,7 +268,7 @@ bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
                 }
             }
         } else {
-            for (int i = rank2 + 1; i < rank1; i++) {
+            for (int i = rank2; i < rank1 + 1; i++) {
                 if (tile[i][file1].getPiece() != EMPTY) {
                     return false;
                 }
@@ -276,6 +277,39 @@ bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
         return true;
     }
     return false;
+}
+
+bool Board::isDiagonalClear(int file1, int rank1, int file2, int rank2) {
+    // Up and right.
+    if (file1 < file2 && rank1 < rank2) {
+        for (int i = 1; i < rank2 - rank1; i++) {
+            if (tile[rank1 + i][file1 + i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    // Up and left.
+    } else if (file1 > file2 && rank1 < rank2) {
+        for (int i = 1; i < rank2 - rank1; i++) {
+            if (tile[rank1 + i][file1 - i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    // Down and right.
+    } else if (file1 < file2 && rank1 > rank2) {
+        for (int i = 1; i < rank1 - rank2; i++) {
+            if (tile[rank1 - i][file1 + i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    // Down and left.
+    } else if (file1 > file2 && rank1 > rank2) {
+        for (int i = 1; i < rank1 - rank2; i++) {
+            if (tile[rank1 - i][file1 - i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
@@ -318,7 +352,10 @@ bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::bishopToMove(int file1, int rank1, int file2, int rank2) {
-    return true;
+    if (abs(file2 - file1) == abs(rank2 - rank1)) {
+        return isDiagonalClear(file1, rank1, file2, rank2);
+    }
+    return false;
 }
 
 bool Board::knightToMove(int file1, int rank1, int file2, int rank2) {
@@ -343,41 +380,8 @@ bool Board::rookToMove(int file1, int rank1, int file2, int rank2) {
     if (rank1 != rank2 && file1 != file2) {
         return false;
     }
-    // Check rank for pieces in the way.
+    // Check rank or file for pieces in the way.
     return isRankOrFileClear(file1, rank1, file2, rank2);
-    /*if (rank1 == rank2) {
-        if (file2 > file1) {
-            for (int i = file1 + 1; i < file2; i++) {
-                if (tile[rank1][i].getPiece() != EMPTY) {
-                    return false;
-                }
-            }
-        } else {
-            for (int i = file2 + 1; i < file1; i++) {
-                if (tile[rank1][i].getPiece() != EMPTY) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    if (file1 == file2) {
-        if (rank2 > rank1) {
-            for (int i = rank1 + 1; i < rank2; i++) {
-                if (tile[i][file1].getPiece() != EMPTY) {
-                    return false;
-                }
-            }
-        } else {
-            for (int i = rank2 + 1; i < rank1; i++) {
-                if (tile[i][file1].getPiece() != EMPTY) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    return false;*/
 }
 
 bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
