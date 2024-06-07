@@ -126,26 +126,38 @@ Board::Board() {
 
 void Board::displayBoard() {
     /*
-    +----+----+----+----+----+----+----+----+
-    | BR | BN | BB | BQ | BK | BB | BN | BR | 1
-    +----+----+----+----+----+----+----+----+
-    | BP | BP | BP | BP | BP | BP | BP | BP | 2
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 3
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 4
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 5
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 6
-    +----+----+----+----+----+----+----+----+
-    | WP | WP | WP | WP | WP | WP | WP | WP | 7
-    +----+----+----+----+----+----+----+----+
-    | WR | WN | WB | WQ | WK | WB | WN | WR | 8
-    +----+----+----+----+----+----+----+----+
-      A    B    C    D    E    F    G    H
+    +---+---+---+---+---+---+---+---+
+    | ♖ | ♘ | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ | 1
+    +---+---+---+---+---+---+---+---+
+    | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | 2
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 3
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 4
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 5
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 6
+    +---+---+---+---+---+---+---+---+
+    | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | 7
+    +---+---+---+---+---+---+---+---+
+    | ♜ | ♞ | ♝ | ♛ | ♚ | ♝ | ♞ | ♜ | 8
+    +---+---+---+---+---+---+---+---+
+      A   B   C   D   E   F   G   H
     */
-    string horizontalLine = "+----+----+----+----+----+----+----+----+";
+    string whiteKing = "\u265A";
+    string whiteQueen = "\u265B";
+    string whiteBishop = "\u265D";
+    string whiteKnight = "\u265E";
+    string whiteRook = "\u265C";
+    string whitePawn = "\u265F";
+    string blackKing = "\u2654";
+    string blackQueen = "\u2655";
+    string blackBishop = "\u2657";
+    string blackKnight = "\u2658";
+    string blackRook = "\u2656";
+    string blackPawn = "\u2659";
+    string horizontalLine = "+---+---+---+---+---+---+---+---+";
     cout << horizontalLine << endl;
     int rank = 8;
     for (int i = 7; i > -1; i--) {
@@ -156,54 +168,54 @@ void Board::displayBoard() {
             switch (p) {
                 case KING:
                     if (c == WHITE) {
-                        cout << "WK ";
+                        cout << whiteKing << " ";
                         break;
                     } else {
-                        cout << "BK ";
+                        cout << blackKing << " ";
                         break;
                     }
                 case QUEEN:
                     if (c == WHITE) {
-                        cout << "WQ ";
+                        cout << whiteQueen << " ";
                         break;
                     } else {
-                        cout << "BQ ";
+                        cout << blackQueen << " ";
                         break;
                     }
                 case BISHOP:
                     if (c == WHITE) {
-                        cout << "WB ";
+                        cout << whiteBishop << " ";
                         break;
                     } else {
-                        cout << "BB ";
+                        cout << blackBishop << " ";
                         break;
                     }
                 case KNIGHT:
                     if (c == WHITE) {
-                        cout << "WN ";
+                        cout << whiteKnight<< " ";
                         break;
                     } else {
-                        cout << "BN ";
+                        cout << blackKnight << " ";
                         break;
                     }
                 case ROOK:
                     if (c == WHITE) {
-                        cout << "WR ";
+                        cout << whiteRook << " ";
                         break;
                     } else {
-                        cout << "BR ";
+                        cout << blackRook << " ";
                         break;
                     }
                 case PAWN:
                     if (c == WHITE) {
-                        cout << "WP ";
+                        cout << whitePawn << " ";
                         break;
                     } else {
-                        cout << "BP ";
+                        cout << blackPawn << " ";
                         break;
                     }
                 case EMPTY:
-                    cout << "   ";
+                    cout << "  ";
                     break;
             }
         }
@@ -211,7 +223,7 @@ void Board::displayBoard() {
         rank -= 1;
         cout << horizontalLine << endl;
     }
-    cout << "  A    B    C    D    E    F    G    H" << endl;
+    cout << "  A   B   C   D   E   F   G   H" << endl;
 }
 
 int letterToIntCoord(char letter) {
