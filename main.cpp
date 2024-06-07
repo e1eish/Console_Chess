@@ -391,7 +391,7 @@ bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
             return true;
         }
         // Normal move.
-        if (rank2 == rank1 + 1 && file1 == file2) {
+        if (rank2 == rank1 + 1 && file1 == file2 && tile[rank2][file2].getPiece() == EMPTY) {
             return true;
         }
         // Capturing a piece.
