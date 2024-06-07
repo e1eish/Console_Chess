@@ -265,8 +265,12 @@ bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
             return true;
         }
     }
+
+    if ((file2 >= file1 - 1) && (file2 <= file1 + 1) && (rank2 >= rank1 - 1) && (rank2 <= rank1 + 1)) {
+        return true;
+    }
     
-    return true;
+    return false;
 }
 
 bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
