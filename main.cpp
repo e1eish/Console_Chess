@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 //#include "Chess.h"
 
 using namespace std;
@@ -30,6 +31,7 @@ class Board {
     Tile tile[8][8];
     Color currentTurn = WHITE;
     bool makeMove();
+    bool isRankOrFileClear(int file1, int rank1, int file2, int rank2);
     bool kingToMove(int file1, int rank1, int file2, int rank2);
     bool queenToMove(int file1, int rank1, int file2, int rank2);
     bool bishopToMove(int file1, int rank1, int file2, int rank2);
@@ -240,6 +242,42 @@ int letterToIntCoord(char letter) {
     }
 }
 
+bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
+    if (rank1 == rank2) {
+        if (file2 > file1) {
+            for (int i = file1 + 1; i < file2; i++) {
+                if (tile[rank1][i].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = file2 + 1; i < file1; i++) {
+                if (tile[rank1][i].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    if (file1 == file2) {
+        if (rank2 > rank1) {
+            for (int i = rank1 + 1; i < rank2; i++) {
+                if (tile[i][file1].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = rank2 + 1; i < rank1; i++) {
+                if (tile[i][file1].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
     // Take care of castling.
     if ((tile[rank1][file1].getColor() == WHITE) && (file1 ==4 && rank1 == 0)) {
@@ -301,11 +339,48 @@ bool Board::knightToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::rookToMove(int file1, int rank1, int file2, int rank2) {
-    return true;
+    // Must stay on rank or file.
+    if (rank1 != rank2 && file1 != file2) {
+        return false;
+    }
+    // Check rank for pieces in the way.
+    return isRankOrFileClear(file1, rank1, file2, rank2);
+    /*if (rank1 == rank2) {
+        if (file2 > file1) {
+            for (int i = file1 + 1; i < file2; i++) {
+                if (tile[rank1][i].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = file2 + 1; i < file1; i++) {
+                if (tile[rank1][i].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    if (file1 == file2) {
+        if (rank2 > rank1) {
+            for (int i = rank1 + 1; i < rank2; i++) {
+                if (tile[i][file1].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = rank2 + 1; i < rank1; i++) {
+                if (tile[i][file1].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    return false;*/
 }
 
 bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
-    cout << "color: " << tile[rank2 - 1][file2].getColor() << endl;
     if (tile[rank1][file1].getColor() == WHITE) {
         // Starting possible two squares
         if (rank1 == 1 && rank2 == 3 && file1 == file2) {
