@@ -21,4 +21,3 @@ The libraries used are the C++ standard library, C numberics library (cmath), an
 # Future Work
 
 - Add a draw condintion to end the game.
-- Accept variations in the way coordinates are entered.

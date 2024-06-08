@@ -298,29 +298,20 @@ void Board::displayBoard() {
     cout << "" << endl;
 }
 
-int letterToIntCoord(char letter) {
-    char first = 'A';
-    char second = 'B';
-    char third = 'C';
-    char fourth = 'D';
-    char fifth = 'E';
-    char sixth = 'F';
-    char seventh = 'G';
-    char eighth = 'H';
-    
-    if (letter == first) {
+int letterToIntCoord(char letter) {    
+    if (letter == 'A' || letter == 'a') {
         return 0;
-    } else if (letter == second) {
+    } else if (letter == 'B' || letter == 'b') {
         return 1;
-    } else if (letter == third) {
+    } else if (letter == 'C' || letter == 'c') {
         return 2;
-    } else if (letter == fourth) {
+    } else if (letter == 'D' || letter == 'd') {
         return 3;
-    } else if (letter == fifth) {
+    } else if (letter == 'E' || letter == 'e') {
         return 4;
-    } else if (letter == sixth) {
+    } else if (letter == 'F' || letter == 'f') {
         return 5;
-    } else if (letter == seventh) {
+    } else if (letter == 'G' || letter == 'g') {
         return 6;
     } else {
         return 7;
