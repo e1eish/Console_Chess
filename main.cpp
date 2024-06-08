@@ -1,7 +1,7 @@
 #include <iostream>
-#include <string>
 #include <cmath>
-//#include "Chess.h"
+#include <string>
+//#include "chess.h"
 
 using namespace std;
 

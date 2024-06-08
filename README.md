@@ -1,8 +1,8 @@
 # Overview
 
-A simple chess game that is played in the console. Two players take turn making moves until a checkmate or draw.
+A simple chess game that is played in the console. Two players take turn making moves until a checkmate.
 
-This software is to learn and practice using C++ and chess seemed fun.
+This software was made to learn and practice using C++. Chess was a fun and somewhat challenging option to make.
 
 [Software Demo Video](http://youtube.link.goes.here)
 
@@ -10,7 +10,7 @@ This software is to learn and practice using C++ and chess seemed fun.
 
 Development was in VSCode using the C++ extension and Clang as the compiler.
 
-No libraries were used as of yet.
+The libraries used are the C++ standard library, C numberics library (cmath), and Strings (string).
 
 # Useful Websites
 
@@ -20,8 +20,5 @@ No libraries were used as of yet.
 
 # Future Work
 
-{Things  to fix, improve, and add in the future.}
-
-- Item 1
-- Item 2
-- Item 3
+- Add a draw condintion to end the game.
+- Accept variations in the way coordinates are entered.

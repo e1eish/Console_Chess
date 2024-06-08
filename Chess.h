@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -10,18 +8,18 @@ enum Color {WHITE, BLACK, NONE};
 class Tile {
     Piece piece;
     Color color;
-    int x;
-    int y;
+    int file;
+    int rank;
 public:
     void setPiece(Piece p);
     Piece getPiece();
     void setColor(Color c);
     Color getColor();
     void setPieceAndColor(Piece p, Color c);
-    void setX(int newX);
-    int getX();
-    void setY(int newY);
-    int getY();
+    void setFile(int newFile);
+    int getFile();
+    void setRank(int newRank);
+    int getRank();
     void setEmpty();
     Tile();
 };
@@ -29,8 +27,17 @@ public:
 class Board {
     Tile tile[8][8];
     Color currentTurn = WHITE;
-    void makeMove(int x1, int y1, int x2, int y2);
+    bool makeMove();
+    bool isRankOrFileClear(int file1, int rank1, int file2, int rank2);
+    bool isDiagonalClear(int file1, int rank1, int file2, int rank2);
+    bool kingToMove(int file1, int rank1, int file2, int rank2);
+    bool queenToMove(int file1, int rank1, int file2, int rank2);
+    bool bishopToMove(int file1, int rank1, int file2, int rank2);
+    bool knightToMove(int file1, int rank1, int file2, int rank2);
+    bool rookToMove(int file1, int rank1, int file2, int rank2);
+    bool pawnToMove(int file1, int rank1, int file2, int rank2);
 public:
     void displayBoard();
+    void playChess();
     Board();
 };

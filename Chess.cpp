@@ -1,4 +1,4 @@
-#include "Chess.h"
+#include "chess.h"
 
 using namespace std;
 
@@ -33,20 +33,20 @@ void Tile::setPieceAndColor(Piece p, Color c) {
     color = c;
 }
 
-void Tile::setX(int newX) {
-    x = newX;
+void Tile::setFile(int newFile) {
+    file = newFile;
 }
 
-int Tile::getX() {
-    return x;
+int Tile::getFile() {
+    return file;
 }
 
-void Tile::setY(int newY) {
-    y = newY;
+void Tile::setRank(int newRank) {
+    rank = newRank;
 }
 
-int Tile::getY() {
-    return y;
+int Tile::getRank() {
+    return rank;
 }
 
 Board::Board() {
@@ -68,102 +68,587 @@ Board::Board() {
     tile[7][1].setPieceAndColor(KNIGHT, BLACK);
     tile[7][2].setPieceAndColor(BISHOP, BLACK);
     tile[7][3].setPieceAndColor(QUEEN, BLACK);
-    tile[0][4].setPieceAndColor(KING, BLACK);
-    tile[0][5].setPieceAndColor(BISHOP, BLACK);
-    tile[0][6].setPieceAndColor(KNIGHT, BLACK);
-    tile[0][7].setPieceAndColor(ROOK, BLACK);
+    tile[7][4].setPieceAndColor(KING, BLACK);
+    tile[7][5].setPieceAndColor(BISHOP, BLACK);
+    tile[7][6].setPieceAndColor(KNIGHT, BLACK);
+    tile[7][7].setPieceAndColor(ROOK, BLACK);
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            tile[i][j].setX(i);
-            tile[i][j].setY(j);
+            tile[i][j].setFile(i);
+            tile[i][j].setRank(j);
         }
     }
 }
 
 void Board::displayBoard() {
     /*
-    +----+----+----+----+----+----+----+----+
-    | BR | BN | BB | BQ | BK | BB | BN | BR | 1
-    +----+----+----+----+----+----+----+----+
-    | BP | BP | BP | BP | BP | BP | BP | BP | 2
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 3
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 4
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 5
-    +----+----+----+----+----+----+----+----+
-    |    |    |    |    |    |    |    |    | 6
-    +----+----+----+----+----+----+----+----+
-    | WP | WP | WP | WP | WP | WP | WP | WP | 7
-    +----+----+----+----+----+----+----+----+
-    | WR | WN | WB | WQ | WK | WB | WN | WR | 8
-    +----+----+----+----+----+----+----+----+
-      A    B    C    D    E    F    G    H
+    +---+---+---+---+---+---+---+---+
+    | ♖ | ♘ | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ | 1
+    +---+---+---+---+---+---+---+---+
+    | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | ♙ | 2
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 3
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 4
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 5
+    +---+---+---+---+---+---+---+---+
+    |   |   |   |   |   |   |   |   | 6
+    +---+---+---+---+---+---+---+---+
+    | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | ♟ | 7
+    +---+---+---+---+---+---+---+---+
+    | ♜ | ♞ | ♝ | ♛ | ♚ | ♝ | ♞ | ♜ | 8
+    +---+---+---+---+---+---+---+---+
+      A   B   C   D   E   F   G   H
     */
-    string horizontalLine = "+----+----+----+----+----+----+----+----+";
-    cout << horizontalLine << endl;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            Piece p = tile[i][j].getPiece();
-            Color c = tile[i][j].getColor();
-            cout << "| ";
-            switch (p) {
-                case KING:
-                    if (c == WHITE) {
-                        cout << "WK";
+    string whiteKing = "\u265A";
+    string whiteQueen = "\u265B";
+    string whiteBishop = "\u265D";
+    string whiteKnight = "\u265E";
+    string whiteRook = "\u265C";
+    string whitePawn = "\u265F";
+    string blackKing = "\u2654";
+    string blackQueen = "\u2655";
+    string blackBishop = "\u2657";
+    string blackKnight = "\u2658";
+    string blackRook = "\u2656";
+    string blackPawn = "\u2659";
+    string horizontalLine = "+---+---+---+---+---+---+---+---+";
+    cout << "" << endl;
+    if (currentTurn == WHITE) {
+        cout << horizontalLine << endl;
+        int rank = 8;
+        for (int i = 7; i > -1; i--) {
+            for (int j = 0; j < 8; j++) {
+                Piece p = tile[i][j].getPiece();
+                Color c = tile[i][j].getColor();
+                cout << "| ";
+                switch (p) {
+                    case KING:
+                        if (c == WHITE) {
+                            cout << whiteKing << " ";
+                            break;
+                        } else {
+                            cout << blackKing << " ";
+                            break;
+                        }
+                    case QUEEN:
+                        if (c == WHITE) {
+                            cout << whiteQueen << " ";
+                            break;
+                        } else {
+                            cout << blackQueen << " ";
+                            break;
+                        }
+                    case BISHOP:
+                        if (c == WHITE) {
+                            cout << whiteBishop << " ";
+                            break;
+                        } else {
+                            cout << blackBishop << " ";
+                            break;
+                        }
+                    case KNIGHT:
+                        if (c == WHITE) {
+                            cout << whiteKnight<< " ";
+                            break;
+                        } else {
+                            cout << blackKnight << " ";
+                            break;
+                        }
+                    case ROOK:
+                        if (c == WHITE) {
+                            cout << whiteRook << " ";
+                            break;
+                        } else {
+                            cout << blackRook << " ";
+                            break;
+                        }
+                    case PAWN:
+                        if (c == WHITE) {
+                            cout << whitePawn << " ";
+                            break;
+                        } else {
+                            cout << blackPawn << " ";
+                            break;
+                        }
+                    case EMPTY:
+                        cout << "  ";
                         break;
-                    } else {
-                        cout << "BK";
+                }
+            }
+            cout << "| " << rank << endl;
+            rank -= 1;
+            cout << horizontalLine << endl;
+        }
+        cout << "  A   B   C   D   E   F   G   H" << endl;
+    }
+    if (currentTurn == BLACK) {
+        cout << horizontalLine << endl;
+        int rank = 1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 7; j > -1; j--) {
+                Piece p = tile[i][j].getPiece();
+                Color c = tile[i][j].getColor();
+                cout << "| ";
+                switch (p) {
+                    case KING:
+                        if (c == WHITE) {
+                            cout << whiteKing << " ";
+                            break;
+                        } else {
+                            cout << blackKing << " ";
+                            break;
+                        }
+                    case QUEEN:
+                        if (c == WHITE) {
+                            cout << whiteQueen << " ";
+                            break;
+                        } else {
+                            cout << blackQueen << " ";
+                            break;
+                        }
+                    case BISHOP:
+                        if (c == WHITE) {
+                            cout << whiteBishop << " ";
+                            break;
+                        } else {
+                            cout << blackBishop << " ";
+                            break;
+                        }
+                    case KNIGHT:
+                        if (c == WHITE) {
+                            cout << whiteKnight<< " ";
+                            break;
+                        } else {
+                            cout << blackKnight << " ";
+                            break;
+                        }
+                    case ROOK:
+                        if (c == WHITE) {
+                            cout << whiteRook << " ";
+                            break;
+                        } else {
+                            cout << blackRook << " ";
+                            break;
+                        }
+                    case PAWN:
+                        if (c == WHITE) {
+                            cout << whitePawn << " ";
+                            break;
+                        } else {
+                            cout << blackPawn << " ";
+                            break;
+                        }
+                    case EMPTY:
+                        cout << "  ";
                         break;
-                    }
-                case QUEEN:
-                    if (c == WHITE) {
-                        cout << "WQ";
-                        break;
-                    } else {
-                        cout << "BQ";
-                        break;
-                    }
-                case BISHOP:
-                    if (c == WHITE) {
-                        cout << "WB";
-                        break;
-                    } else {
-                        cout << "BB";
-                        break;
-                    }
-                case KNIGHT:
-                    if (c == WHITE) {
-                        cout << "WN";
-                        break;
-                    } else {
-                        cout << "BN";
-                        break;
-                    }
-                case ROOK:
-                    if (c == WHITE) {
-                        cout << "WR";
-                        break;
-                    } else {
-                        cout << "BR";
-                        break;
-                    }
-                case PAWN:
-                    if (c == WHITE) {
-                        cout << "WP";
-                        break;
-                    } else {
-                        cout << "BP";
-                        break;
-                    }
-                case EMPTY:
-                    cout << "  ";
-                    break;
+                }
+            }
+            cout << "| " << rank << endl;
+            rank += 1;
+            cout << horizontalLine << endl;
+        }
+        cout << "  H   G   F   E   D   C   B   A" << endl;
+    }
+    cout << "" << endl;
+}
+
+int letterToIntCoord(char letter) {
+    char first = 'A';
+    char second = 'B';
+    char third = 'C';
+    char fourth = 'D';
+    char fifth = 'E';
+    char sixth = 'F';
+    char seventh = 'G';
+    char eighth = 'H';
+    
+    if (letter == first) {
+        return 0;
+    } else if (letter == second) {
+        return 1;
+    } else if (letter == third) {
+        return 2;
+    } else if (letter == fourth) {
+        return 3;
+    } else if (letter == fifth) {
+        return 4;
+    } else if (letter == sixth) {
+        return 5;
+    } else if (letter == seventh) {
+        return 6;
+    } else {
+        return 7;
+    }
+}
+
+bool Board::isRankOrFileClear(int file1, int rank1, int file2, int rank2) {
+    if (rank1 == rank2) {
+        if (file2 > file1) {
+            for (int i = file1 + 1; i < file2; i++) {
+                if (tile[rank1][i].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = file2 + 1; i < file1; i++) {
+                if (tile[rank1][i].getPiece() != EMPTY) {
+                    return false;
+                }
             }
         }
-        cout << "| " << i << endl;
-        cout << horizontalLine << endl;
+        return true;
+    }
+    if (file1 == file2) {
+        if (rank2 > rank1) {
+            for (int i = rank1 + 1; i < rank2; i++) {
+                if (tile[i][file1].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = rank2 + 1; i < rank1; i++) {
+                if (tile[i][file1].getPiece() != EMPTY) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+bool Board::isDiagonalClear(int file1, int rank1, int file2, int rank2) {
+    // Up and right.
+    if (file1 < file2 && rank1 < rank2) {
+        for (int i = 1; i < rank2 - rank1; i++) {
+            if (tile[rank1 + i][file1 + i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    // Up and left.
+    } else if (file1 > file2 && rank1 < rank2) {
+        for (int i = 1; i < rank2 - rank1; i++) {
+            if (tile[rank1 + i][file1 - i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    // Down and right.
+    } else if (file1 < file2 && rank1 > rank2) {
+        for (int i = 1; i < rank1 - rank2; i++) {
+            if (tile[rank1 - i][file1 + i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    // Down and left.
+    } else if (file1 > file2 && rank1 > rank2) {
+        for (int i = 1; i < rank1 - rank2; i++) {
+            if (tile[rank1 - i][file1 - i].getPiece() != EMPTY) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
+    // Take care of castling.
+    if ((tile[rank1][file1].getColor() == WHITE) && (file1 ==4 && rank1 == 0)) {
+        // Castle king side.
+        if ((file2 == 6 && rank2 == 0) && (tile[0][7].getPiece() == ROOK)) {
+            tile[0][5].setPieceAndColor(ROOK, WHITE);
+            tile[0][7].setEmpty();
+            return true;
+        // Castle queen side
+        } else if ((file2 == 2 && rank2 == 0) && (tile[0][0].getPiece() == ROOK)) {
+            tile[0][3].setPieceAndColor(ROOK, WHITE);
+            tile[0][0].setEmpty();
+            return true;
+        }
+    } else if ((tile[rank1][file1].getColor() == BLACK) && (file1 == 4 && rank1 == 7)) {
+        // Castle king side.
+        if ((file2 == 6 && rank2 == 7) && (tile[7][7].getPiece() == ROOK)) {
+            tile[7][5].setPieceAndColor(ROOK, BLACK);
+            tile[7][7].setEmpty();
+            return true;
+        // Castle queen side.
+        } else if ((file2 == 2 && rank2 == 7) && (tile[7][0].getPiece() == ROOK)) {
+            tile[7][3].setPieceAndColor(ROOK, BLACK);
+            tile[7][0].setEmpty();
+            return true;
+        }
+    }
+
+    if ((file2 >= file1 - 1) && (file2 <= file1 + 1) && (rank2 >= rank1 - 1) && (rank2 <= rank1 + 1)) {
+        return true;
+    }
+    
+    return false;
+}
+
+bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
+    if (abs(file2 - file1) == abs(rank2 - rank1)) {
+        return isDiagonalClear(file1, rank1, file2, rank2);
+    }
+    if (rank1 == rank2 || file1 == file2) {
+        return isRankOrFileClear(file1, rank1, file2, rank2);
+    }
+    return false;
+}
+
+bool Board::bishopToMove(int file1, int rank1, int file2, int rank2) {
+    if (abs(file2 - file1) == abs(rank2 - rank1)) {
+        return isDiagonalClear(file1, rank1, file2, rank2);
+    }
+    return false;
+}
+
+bool Board::knightToMove(int file1, int rank1, int file2, int rank2) {
+    // Moving up.
+    if ((rank2 == rank1 + 2) && (file2 == file1 + 1 || file2 == file1 - 1)) {
+        return true;
+    // Moving down.
+    } else if ((rank2 == rank1 - 2) && (file2 == file1 + 1 || file2 == file1 - 1)) {
+        return true;
+    // Moving right.
+    } else if ((file2 == file1 + 2) && (rank2 == rank1 + 1 || rank2 == rank1 - 1)) {
+        return true;
+    // Moving left.
+    } else if ((file2 == file1 - 1) && (rank2 == rank1 + 1 || rank2 == rank1 - 1)) {
+        return true;
+    }
+    return false;
+}
+
+bool Board::rookToMove(int file1, int rank1, int file2, int rank2) {
+    // Must stay on rank or file.
+    if (rank1 != rank2 && file1 != file2) {
+        return false;
+    }
+    // Check rank or file for pieces in the way.
+    return isRankOrFileClear(file1, rank1, file2, rank2);
+}
+
+bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
+    if (tile[rank1][file1].getColor() == WHITE) {
+        // Starting possible two squares
+        if (rank1 == 1 && rank2 == 3 && file1 == file2) {
+            return true;
+        }
+        // Normal move.
+        if (rank2 == rank1 + 1 && file1 == file2 && tile[rank2][file2].getPiece() == EMPTY) {
+            return true;
+        }
+        // Capturing a piece.
+        if (rank2 == rank1 + 1 && (file2 == file1 + 1 || file2 == file1 - 1)) {
+            // Normal capture.
+            if (tile[rank2][file2].getColor() == BLACK) {
+                return true;
+            }
+            // En passant
+            if (tile[rank2 - 1][file2].getColor() == BLACK) {
+                tile[rank2 - 1][file2].setEmpty();
+                return true;
+            }
+        }
+    } else {
+        // Starting possible two squares
+        if (rank1 == 6 && rank2 == 4 && file1 == file2) {
+            return true;
+        }
+        // Normal move.
+        if (rank2 == rank1 - 1 && file1 == file2) {
+            return true;
+        }
+        // Capturing a piece.
+        if (rank2 == rank1 - 1 && (file2 == file1 + 1 || file2 == file1 - 1) && tile[rank2][file2].getColor() == WHITE) {
+            // Normal capture.
+            if (tile[rank2][file2].getColor() == WHITE) {
+                return true;
+            }
+            // En passant
+            if (tile[rank1][file2].getColor() == WHITE) {
+                tile[rank1][file2].setEmpty();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Board::makeMove() {
+    string coordStart;
+    string coordEnd;
+    int file1;
+    int rank1;
+    int file2;
+    int rank2;
+    bool isValid = false;
+    bool validMove = false;
+
+    string turnName;
+    if (currentTurn == WHITE) {
+        turnName = "White";
+    } else {
+        turnName = "Black";
+    }
+
+    while (validMove == false) {
+        isValid = false;
+        while (isValid == false) {
+            cout << "What is the coordinate (A1) of the piece you want to move?\n" << turnName << "> ";
+            cin >> coordStart;
+            if (coordStart == "q" || coordStart == "Q") {
+                exit(0);
+            }
+
+            file1 = letterToIntCoord(coordStart[0]);
+            rank1 = coordStart[1] - 49;
+
+            //cout << "x:" << file1 << ", y:" << rank1 << endl;
+            //cout << "piece:" << tile[rank1][file1].getPiece() << ", color:" << tile[rank1][file1].getColor() << endl;
+
+            if (file1 < 0 || file1 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (rank1 < 0 || rank1 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (tile[rank1][file1].getColor() != currentTurn) {
+                cout << "Please enter a coordinate that has your piece." << endl;
+            } else {
+                isValid = true;
+            }
+        }
+
+        isValid = false;
+        while (isValid == false) {
+            cout << "What is the coodinate the piece should be placed at?\n> ";
+            cin >> coordEnd;
+            if (coordEnd == "q" || coordEnd == "Q") {
+                exit(0);
+            }
+
+            file2 = letterToIntCoord(coordEnd[0]);
+            rank2 = coordEnd[1] - 49;
+
+            //cout << "x:" << file2 << "y:" << rank2 << endl;
+            //cout << "piece:" << tile[rank2][file2].getPiece() << ", color:" << tile[rank2][file2].getColor() << endl;
+
+            if (file2 < 0 || file2 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (rank2 < 0 || rank2 > 7) {
+                cout << "Please enter a coordinate within the board." << endl;
+            } else if (tile[rank2][file2].getColor() == currentTurn) {
+                cout << "That space already has a piece." << endl;
+            } else {
+                isValid = true;
+            }
+        }
+
+        // King to move.
+        if (tile[rank1][file1].getPiece() == KING) {
+            if (kingToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The king cannot move there." << endl;
+            }
+        }
+
+        // Queen to move.
+        if (tile[rank1][file1].getPiece() == QUEEN) {
+            if (queenToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The queen cannot move there." << endl;
+            }
+        }
+
+        // Bishop to move.
+        if (tile[rank1][file1].getPiece() == BISHOP) {
+            if (bishopToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The bishop cannot move there." << endl;
+            }
+        }
+
+        // Knight to move.
+        if (tile[rank1][file1].getPiece() == KNIGHT) {
+            if (knightToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The knight cannot move there." << endl;
+            }
+        }
+
+        // Rook to move.
+        if (tile[rank1][file1].getPiece() == ROOK) {
+            if (rookToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+            } else {
+                cout << "The rook cannot move there." << endl;
+            }
+        }
+
+        // Pawn to move.
+        if (tile[rank1][file1].getPiece() == PAWN) {
+            if (pawnToMove(file1, rank1, file2, rank2)) {
+                validMove = true;
+                // Promotion
+                if (rank2 == 0 || rank2 == 7) {
+                    string promotionPieceString;
+                    cout << "What piece would you like to promote to? (Q, B, N, R)\n> ";
+                    cin >> promotionPieceString;
+                    Piece promotionPiece;
+                    if (promotionPieceString == "Q") {
+                        promotionPiece = QUEEN;
+                    } else if (promotionPieceString == "B") {
+                        promotionPiece = BISHOP;
+                    } else if (promotionPieceString == "N") {
+                        promotionPiece = KNIGHT;
+                    } else if (promotionPieceString == "R") {
+                        promotionPiece = ROOK;
+                    } else {
+                        promotionPiece = QUEEN;
+                    }
+                    tile[rank1][file1].setPiece(promotionPiece);
+                }
+            } else {
+                cout << "The pawn cannot move there." << endl;
+            }
+        }
+    }
+
+    // Check king captured.
+    if (tile[rank2][file2].getPiece() == KING) {
+        tile[rank2][file2].setPieceAndColor(tile[rank1][file1].getPiece(), tile[rank1][file1].getColor());
+        tile[rank1][file1].setEmpty();
+        if (currentTurn == WHITE) {
+            cout << "White won!" << endl;
+        } else {
+            cout << "Black won!" << endl;
+        }
+        return true;
+    }
+
+    tile[rank2][file2].setPieceAndColor(tile[rank1][file1].getPiece(), tile[rank1][file1].getColor());
+    tile[rank1][file1].setEmpty();
+    if (currentTurn == WHITE) {
+        currentTurn = BLACK;
+    } else {
+        currentTurn = WHITE;
+    }
+    return false;
+}
+
+void Board::playChess() {
+    displayBoard();
+    bool isPlaying = true;
+    while (isPlaying) {
+        if (makeMove()) {
+            isPlaying = false;
+        }
+        displayBoard();
     }
 }
