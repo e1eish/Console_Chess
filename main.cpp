@@ -706,11 +706,11 @@ void displayStartMessage() {
     .  .........\n
     -----------------
     Welcome to Chess!
-    Enter coordinates, in the form E6, to select and move pieces. Take turns until someone captures their opponent's king.
+    Enter coordinates, in the form E6, to select and move pieces. Take turns until someone delivers checkmate to their opponent's king.
     Type "Q" to quit. 
     */
     string startArt = "    . ..\n   . ....\n   . ....\n    . ..\n  . ......\n\n   .  ...\n   .  ...\n   .  ...\n   .  ...\n  .   ....\n .   ......\n .  .......\n.  .........\n";
-    string startMessage = "Welcome to Chess!\nEnter coordinates, in the form E6, to select and move pieces. Take turns until someone captures their opponent's king.\nType \"Q\" to quit.";
+    string startMessage = "Welcome to Chess!\nEnter coordinates, in the form E6, to select and move pieces. Take turns until someone delivers checkmate to their opponent's king.\nType \"Q\" to quit.";
     cout << "\n" << startArt << "-----------------\n" << startMessage << endl;
 }
 
