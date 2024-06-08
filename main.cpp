@@ -145,6 +145,7 @@ void Board::displayBoard() {
     +---+---+---+---+---+---+---+---+
       A   B   C   D   E   F   G   H
     */
+    // Unicode codes for all of the pieces
     string whiteKing = "\u265A";
     string whiteQueen = "\u265B";
     string whiteBishop = "\u265D";
@@ -423,6 +424,7 @@ bool Board::kingToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
+    // Check if the squares are diagonal to each other. |x2 - x1| = |y2 - y1|
     if (abs(file2 - file1) == abs(rank2 - rank1)) {
         return isDiagonalClear(file1, rank1, file2, rank2);
     }
@@ -433,6 +435,7 @@ bool Board::queenToMove(int file1, int rank1, int file2, int rank2) {
 }
 
 bool Board::bishopToMove(int file1, int rank1, int file2, int rank2) {
+    // Check if the squares are diagonal to each other. |x2 - x1| = |y2 - y1|
     if (abs(file2 - file1) == abs(rank2 - rank1)) {
         return isDiagonalClear(file1, rank1, file2, rank2);
     }
@@ -530,6 +533,7 @@ bool Board::makeMove() {
     }
 
     while (validMove == false) {
+        // Getting coordinate of the piece to move.
         isValid = false;
         while (isValid == false) {
             cout << "What is the coordinate (A1) of the piece you want to move?\n" << turnName << "> ";
@@ -540,9 +544,6 @@ bool Board::makeMove() {
 
             file1 = letterToIntCoord(coordStart[0]);
             rank1 = coordStart[1] - 49;
-
-            //cout << "x:" << file1 << ", y:" << rank1 << endl;
-            //cout << "piece:" << tile[rank1][file1].getPiece() << ", color:" << tile[rank1][file1].getColor() << endl;
 
             if (file1 < 0 || file1 > 7) {
                 cout << "Please enter a coordinate within the board." << endl;
@@ -555,6 +556,7 @@ bool Board::makeMove() {
             }
         }
 
+        // Getting coordinate of the destination tile.
         isValid = false;
         while (isValid == false) {
             cout << "What is the coodinate the piece should be placed at?\n> ";
@@ -565,9 +567,6 @@ bool Board::makeMove() {
 
             file2 = letterToIntCoord(coordEnd[0]);
             rank2 = coordEnd[1] - 49;
-
-            //cout << "x:" << file2 << "y:" << rank2 << endl;
-            //cout << "piece:" << tile[rank2][file2].getPiece() << ", color:" << tile[rank2][file2].getColor() << endl;
 
             if (file2 < 0 || file2 > 7) {
                 cout << "Please enter a coordinate within the board." << endl;
