@@ -485,7 +485,7 @@ bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
                 return true;
             }
             // En passant
-            if (tile[rank2 - 1][file2].getColor() == BLACK) {
+            if (tile[rank2 - 1][file2].getColor() == BLACK && rank1 == 4) {
                 tile[rank2 - 1][file2].setEmpty();
                 return true;
             }
@@ -506,7 +506,7 @@ bool Board::pawnToMove(int file1, int rank1, int file2, int rank2) {
                 return true;
             }
             // En passant
-            if (tile[rank1][file2].getColor() == WHITE) {
+            if (tile[rank1][file2].getColor() == WHITE && rank1 == 3) {
                 tile[rank1][file2].setEmpty();
                 return true;
             }
